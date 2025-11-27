@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -73,6 +75,7 @@ class ProductControllerTest {
         );
 
         mockMvc.perform(post("/api/products")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
@@ -90,6 +93,7 @@ class ProductControllerTest {
         );
 
         mockMvc.perform(post("/api/products")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest());
@@ -100,6 +104,7 @@ class ProductControllerTest {
         StockChangeRequest request = new StockChangeRequest(5, "APIテスト担当者");
 
         mockMvc.perform(post("/api/products/" + testProduct.getId() + "/increase")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -111,6 +116,7 @@ class ProductControllerTest {
         StockChangeRequest request = new StockChangeRequest(5, "APIテスト担当者");
 
         mockMvc.perform(post("/api/products/" + testProduct.getId() + "/decrease")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -122,6 +128,7 @@ class ProductControllerTest {
         StockChangeRequest request = new StockChangeRequest(25, "APIテスト担当者");
 
         mockMvc.perform(post("/api/products/" + testProduct.getId() + "/decrease")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isConflict());
@@ -134,6 +141,7 @@ class ProductControllerTest {
         productRepository.save(testProduct);
 
         mockMvc.perform(delete("/api/products/" + testProduct.getId())
+                .with(csrf())
                 .param("operatorName", "APIテスト担当者"))
             .andExpect(status().isNoContent());
     }
@@ -141,6 +149,7 @@ class ProductControllerTest {
     @Test
     void testDeleteProductWithStockConflict() throws Exception {
         mockMvc.perform(delete("/api/products/" + testProduct.getId())
+                .with(csrf())
                 .param("operatorName", "APIテスト担当者"))
             .andExpect(status().isConflict());
     }

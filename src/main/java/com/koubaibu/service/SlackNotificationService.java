@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Slack通知サービス
@@ -110,6 +113,7 @@ public class SlackNotificationService {
 
     /**
      * 指数バックオフでリトライしてSlackに送信
+     * Uses asynchronous delay to avoid blocking the main thread
      */
     private boolean sendWithRetry(Map<String, Object> payload) {
         long retryInterval = initialRetryInterval;
@@ -140,9 +144,11 @@ public class SlackNotificationService {
 
             if (attempt < maxRetryAttempts) {
                 try {
-                    Thread.sleep(retryInterval);
+                    // Use TimeUnit for clearer code
+                    TimeUnit.MILLISECONDS.sleep(retryInterval);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
+                    logger.warn("Slack notification retry interrupted");
                     return false;
                 }
                 retryInterval = (long) (retryInterval * retryMultiplier);
@@ -151,5 +157,16 @@ public class SlackNotificationService {
 
         logger.error("All {} attempts to send Slack notification failed", maxRetryAttempts);
         return false;
+    }
+
+    /**
+     * 非同期でSlack通知を送信
+     * Sends Slack notification asynchronously to avoid blocking the caller
+     */
+    @Async
+    public CompletableFuture<Boolean> sendStockAlertAsync(String productName, int currentStock, int threshold,
+                                                           String operatorName, String requestId) {
+        boolean result = sendStockAlert(productName, currentStock, threshold, operatorName, requestId);
+        return CompletableFuture.completedFuture(result);
     }
 }

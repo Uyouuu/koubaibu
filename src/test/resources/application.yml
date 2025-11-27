@@ -14,7 +14,7 @@ spring:
   sql:
     init:
       mode: always
-      data-locations: # Empty - don't load data.sql for tests
+      data-locations: classpath:empty-data.sql
   h2:
     console:
       enabled: false

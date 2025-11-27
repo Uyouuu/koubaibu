@@ -89,12 +89,23 @@ public class OperatorTokenFilter extends OncePerRequestFilter {
 
     /**
      * トークンを検証（スタブ実装）
-     * 本番環境では物理カードリーダー/HSMと連携して検証を行う
+     * 
+     * WARNING: This is a stub implementation that ALWAYS returns true.
+     * DO NOT use in production without implementing proper token validation!
+     * 
+     * Production implementation should:
+     * - Validate token against HSM or physical card reader
+     * - Check token expiration
+     * - Verify token signature
+     * - Log validation attempts for audit
+     * 
+     * @param token The operator token to validate
+     * @return true if valid (STUB: always returns true)
      */
     private boolean validateToken(String token) {
-        // スタブ実装: 任意のトークンを受け入れる
-        // TODO: 本番環境では物理カードリーダー/HSMと連携して検証
-        logger.debug("Validating operator token (stub implementation)");
+        // STUB IMPLEMENTATION - INSECURE FOR PRODUCTION
+        // TODO: Replace with HSM/physical card reader integration before production deployment
+        logger.warn("Using STUB token validation - INSECURE FOR PRODUCTION! Token validation always returns true.");
         return true;
     }
 }

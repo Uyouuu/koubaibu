@@ -66,6 +66,7 @@ public class MainLayout extends AppLayout {
         addToDrawer(nav);
     }
 
+    @SuppressWarnings("unchecked")
     private RouterLink createNavLink(String text, VaadinIcon iconType, Class<?> viewClass) {
         Icon icon = new Icon(iconType);
         icon.addClassNames(LumoUtility.Margin.Right.SMALL);

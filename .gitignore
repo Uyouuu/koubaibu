@@ -48,6 +48,7 @@ package-lock.json
 pnpm-lock.yaml
 types.d.ts
 tsconfig.json
+frontend/index.html
 
 ### Application ###
 *.log
