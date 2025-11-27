@@ -1,0 +1,34 @@
+# Staging Profile Configuration (PostgreSQL)
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/koubaibu_stg}
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME:koubaibu}
+    password: ${DATABASE_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: never
+
+# Security - enabled for staging
+security:
+  mtls:
+    enabled: true
+  operator-token:
+    enabled: true
+
+# Slack notification - enabled
+slack:
+  enabled: true
+  webhook-url: ${SLACK_WEBHOOK_URL:}
+
+logging:
+  level:
+    root: INFO
+    com.koubaibu: INFO
