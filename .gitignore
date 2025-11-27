@@ -11,6 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea/
 
 ### Eclipse ###
 .apt_generated
@@ -36,3 +37,19 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Vaadin ###
+node_modules/
+frontend/generated/
+vite.generated.ts
+vite.config.ts
+package.json
+package-lock.json
+pnpm-lock.yaml
+types.d.ts
+tsconfig.json
+
+### Application ###
+*.log
+*.tmp
+/logs/

@@ -1,0 +1,33 @@
+# Development Profile Configuration (H2 Database)
+spring:
+  datasource:
+    url: jdbc:h2:mem:koubaibu;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+
+# Security - relaxed for development
+security:
+  mtls:
+    enabled: false
+  operator-token:
+    enabled: false
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
